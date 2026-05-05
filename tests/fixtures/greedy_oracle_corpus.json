@@ -1,0 +1,776 @@
+[
+  {
+    "name": "p0_seed13_step0",
+    "player": 0,
+    "seed": 13,
+    "events": [],
+    "expected": [
+      [
+        11,
+        6,
+        4
+      ]
+    ]
+  },
+  {
+    "name": "p0_seed13_step1",
+    "player": 0,
+    "seed": 13,
+    "events": [
+      {
+        "kind": "self_ops",
+        "operations": [
+          [
+            11,
+            6,
+            4
+          ]
+        ]
+      },
+      {
+        "kind": "opponent_ops",
+        "operations": [
+          [
+            11,
+            14,
+            9
+          ]
+        ]
+      },
+      {
+        "kind": "round_state",
+        "state": {
+          "round_index": 1,
+          "towers": [
+            [
+              0,
+              0,
+              6,
+              4,
+              0,
+              1
+            ],
+            [
+              1,
+              1,
+              14,
+              9,
+              0,
+              1
+            ]
+          ],
+          "ants": [
+            [
+              0,
+              0,
+              2,
+              9,
+              10,
+              0,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              16,
+              9,
+              10,
+              0,
+              0,
+              0
+            ]
+          ],
+          "coins": [
+            36,
+            36
+          ],
+          "camps_hp": [
+            50,
+            50
+          ]
+        }
+      }
+    ],
+    "expected": []
+  },
+  {
+    "name": "p0_seed13_step2",
+    "player": 0,
+    "seed": 13,
+    "events": [
+      {
+        "kind": "self_ops",
+        "operations": [
+          [
+            11,
+            6,
+            4
+          ]
+        ]
+      },
+      {
+        "kind": "opponent_ops",
+        "operations": [
+          [
+            11,
+            14,
+            9
+          ]
+        ]
+      },
+      {
+        "kind": "round_state",
+        "state": {
+          "round_index": 1,
+          "towers": [
+            [
+              0,
+              0,
+              6,
+              4,
+              0,
+              1
+            ],
+            [
+              1,
+              1,
+              14,
+              9,
+              0,
+              1
+            ]
+          ],
+          "ants": [
+            [
+              0,
+              0,
+              2,
+              9,
+              10,
+              0,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              16,
+              9,
+              10,
+              0,
+              0,
+              0
+            ]
+          ],
+          "coins": [
+            36,
+            36
+          ],
+          "camps_hp": [
+            50,
+            50
+          ]
+        }
+      },
+      {
+        "kind": "self_ops",
+        "operations": []
+      },
+      {
+        "kind": "opponent_ops",
+        "operations": [
+          [
+            11,
+            13,
+            7
+          ]
+        ]
+      },
+      {
+        "kind": "round_state",
+        "state": {
+          "round_index": 2,
+          "towers": [
+            [
+              0,
+              0,
+              6,
+              4,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              14,
+              9,
+              0,
+              0
+            ],
+            [
+              2,
+              1,
+              13,
+              7,
+              0,
+              1
+            ]
+          ],
+          "ants": [
+            [
+              0,
+              0,
+              3,
+              9,
+              10,
+              0,
+              1,
+              0
+            ],
+            [
+              1,
+              1,
+              15,
+              9,
+              10,
+              0,
+              1,
+              0
+            ]
+          ],
+          "coins": [
+            37,
+            7
+          ],
+          "camps_hp": [
+            50,
+            50
+          ]
+        }
+      }
+    ],
+    "expected": []
+  },
+  {
+    "name": "p0_seed13_step3",
+    "player": 0,
+    "seed": 13,
+    "events": [
+      {
+        "kind": "self_ops",
+        "operations": [
+          [
+            11,
+            6,
+            4
+          ]
+        ]
+      },
+      {
+        "kind": "opponent_ops",
+        "operations": [
+          [
+            11,
+            14,
+            9
+          ]
+        ]
+      },
+      {
+        "kind": "round_state",
+        "state": {
+          "round_index": 1,
+          "towers": [
+            [
+              0,
+              0,
+              6,
+              4,
+              0,
+              1
+            ],
+            [
+              1,
+              1,
+              14,
+              9,
+              0,
+              1
+            ]
+          ],
+          "ants": [
+            [
+              0,
+              0,
+              2,
+              9,
+              10,
+              0,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              16,
+              9,
+              10,
+              0,
+              0,
+              0
+            ]
+          ],
+          "coins": [
+            36,
+            36
+          ],
+          "camps_hp": [
+            50,
+            50
+          ]
+        }
+      },
+      {
+        "kind": "self_ops",
+        "operations": []
+      },
+      {
+        "kind": "opponent_ops",
+        "operations": [
+          [
+            11,
+            13,
+            7
+          ]
+        ]
+      },
+      {
+        "kind": "round_state",
+        "state": {
+          "round_index": 2,
+          "towers": [
+            [
+              0,
+              0,
+              6,
+              4,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              14,
+              9,
+              0,
+              0
+            ],
+            [
+              2,
+              1,
+              13,
+              7,
+              0,
+              1
+            ]
+          ],
+          "ants": [
+            [
+              0,
+              0,
+              3,
+              9,
+              10,
+              0,
+              1,
+              0
+            ],
+            [
+              1,
+              1,
+              15,
+              9,
+              10,
+              0,
+              1,
+              0
+            ]
+          ],
+          "coins": [
+            37,
+            7
+          ],
+          "camps_hp": [
+            50,
+            50
+          ]
+        }
+      },
+      {
+        "kind": "self_ops",
+        "operations": []
+      },
+      {
+        "kind": "opponent_ops",
+        "operations": [
+          [
+            13,
+            2,
+            -1
+          ]
+        ]
+      },
+      {
+        "kind": "round_state",
+        "state": {
+          "round_index": 3,
+          "towers": [
+            [
+              0,
+              0,
+              6,
+              4,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              14,
+              9,
+              0,
+              0
+            ]
+          ],
+          "ants": [
+            [
+              0,
+              0,
+              3,
+              8,
+              10,
+              0,
+              2,
+              0
+            ],
+            [
+              1,
+              1,
+              14,
+              10,
+              10,
+              0,
+              2,
+              0
+            ]
+          ],
+          "coins": [
+            38,
+            32
+          ],
+          "camps_hp": [
+            50,
+            50
+          ]
+        }
+      }
+    ],
+    "expected": [
+      [
+        13,
+        0,
+        -1
+      ],
+      [
+        11,
+        5,
+        12
+      ]
+    ]
+  },
+  {
+    "name": "p1_seed17_step0",
+    "player": 1,
+    "seed": 17,
+    "events": [
+      {
+        "kind": "opponent_ops",
+        "operations": [
+          [
+            11,
+            5,
+            7
+          ]
+        ]
+      }
+    ],
+    "expected": [
+      [
+        11,
+        11,
+        5
+      ]
+    ]
+  },
+  {
+    "name": "p1_seed17_step1",
+    "player": 1,
+    "seed": 17,
+    "events": [
+      {
+        "kind": "opponent_ops",
+        "operations": [
+          [
+            11,
+            5,
+            7
+          ]
+        ]
+      },
+      {
+        "kind": "self_ops",
+        "operations": [
+          [
+            11,
+            11,
+            5
+          ]
+        ]
+      },
+      {
+        "kind": "round_state",
+        "state": {
+          "round_index": 1,
+          "towers": [
+            [
+              0,
+              0,
+              5,
+              7,
+              0,
+              1
+            ],
+            [
+              1,
+              1,
+              11,
+              5,
+              0,
+              1
+            ]
+          ],
+          "ants": [
+            [
+              0,
+              0,
+              2,
+              9,
+              10,
+              0,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              16,
+              9,
+              10,
+              0,
+              0,
+              0
+            ]
+          ],
+          "coins": [
+            36,
+            36
+          ],
+          "camps_hp": [
+            50,
+            50
+          ]
+        }
+      },
+      {
+        "kind": "opponent_ops",
+        "operations": [
+          [
+            11,
+            4,
+            9
+          ]
+        ]
+      }
+    ],
+    "expected": []
+  },
+  {
+    "name": "p1_seed17_step2",
+    "player": 1,
+    "seed": 17,
+    "events": [
+      {
+        "kind": "opponent_ops",
+        "operations": [
+          [
+            11,
+            5,
+            7
+          ]
+        ]
+      },
+      {
+        "kind": "self_ops",
+        "operations": [
+          [
+            11,
+            11,
+            5
+          ]
+        ]
+      },
+      {
+        "kind": "round_state",
+        "state": {
+          "round_index": 1,
+          "towers": [
+            [
+              0,
+              0,
+              5,
+              7,
+              0,
+              1
+            ],
+            [
+              1,
+              1,
+              11,
+              5,
+              0,
+              1
+            ]
+          ],
+          "ants": [
+            [
+              0,
+              0,
+              2,
+              9,
+              10,
+              0,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              16,
+              9,
+              10,
+              0,
+              0,
+              0
+            ]
+          ],
+          "coins": [
+            36,
+            36
+          ],
+          "camps_hp": [
+            50,
+            50
+          ]
+        }
+      },
+      {
+        "kind": "opponent_ops",
+        "operations": [
+          [
+            11,
+            4,
+            9
+          ]
+        ]
+      },
+      {
+        "kind": "self_ops",
+        "operations": []
+      },
+      {
+        "kind": "round_state",
+        "state": {
+          "round_index": 2,
+          "towers": [
+            [
+              0,
+              0,
+              5,
+              7,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              11,
+              5,
+              0,
+              0
+            ],
+            [
+              2,
+              0,
+              4,
+              9,
+              0,
+              1
+            ]
+          ],
+          "ants": [
+            [
+              0,
+              0,
+              3,
+              9,
+              10,
+              0,
+              1,
+              0
+            ],
+            [
+              1,
+              1,
+              15,
+              9,
+              10,
+              0,
+              1,
+              0
+            ]
+          ],
+          "coins": [
+            7,
+            37
+          ],
+          "camps_hp": [
+            50,
+            50
+          ]
+        }
+      },
+      {
+        "kind": "opponent_ops",
+        "operations": [
+          [
+            13,
+            2,
+            -1
+          ]
+        ]
+      }
+    ],
+    "expected": []
+  }
+]

@@ -1,0 +1,50 @@
+# OS / editors
+.DS_Store
+.vscode/
+
+# Python caches
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Test / coverage artifacts
+.coverage
+.coverage.*
+htmlcov/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+*.so
+*.dylib
+*.dll
+
+# Local runtime artifacts
+replays/
+logs/
+
+# Legacy local files
+_main.py
+__main.py
+*.zip
+
+src/*.o
+
+game/output/
+game/*.bin
+game/*.txt
+game/*.json
+game/src/*.o
+game/src/*.d
+game_debugged
+game_repro_replay.json
+mini_replay.txt
+update.md
+
+AI/ai_greedy_cpp
+checkpoints/
