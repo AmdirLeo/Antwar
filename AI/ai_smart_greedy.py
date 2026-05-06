@@ -38,11 +38,11 @@ class SmartGreedyAgent(BaseAgent):
         if not enemy_ants:
             return 0.0
 
-        base_coords = PLAYER_BASES[player][0]
+        base_x, base_y = PLAYER_BASES[player]
         threat_score = 0.0
 
         for ant in enemy_ants:
-            dist = hex_distance(ant.x, ant.y, base_coords[0], base_coords[1])
+            dist = hex_distance(ant.x, ant.y, base_x, base_y)
             weight = 5.0 if ant.kind == AntKind.COMBAT else 1.0
 
             if dist < 10:
@@ -123,6 +123,23 @@ class SmartGreedyAgent(BaseAgent):
                         min_dist_to_enemy = min([hex_distance(op.arg0, op.arg1, ant.x, ant.y) for ant in enemy_ants] + [999])
                         if 1 <= min_dist_to_enemy <= 4:
                             custom_score += 50.0 - min_dist_to_enemy * 5.0
+
+                        # Proactive Strategy: Map Control & Outpost Expansion
+                        if threat_level < 10.0 and coins > 40 and len(my_towers) < 3:
+                            # Map Control Base Score
+                            custom_score += 100.0
+
+                            # Outpost score: closer to x=9 is better
+                            dist_to_center_x = abs(op.arg0 - 9)
+                            outpost_score = (9 - dist_to_center_x) * 5.0
+
+                            # Further from base is better
+                            base_x, base_y = PLAYER_BASES[player]
+                            dist_to_base = hex_distance(op.arg0, op.arg1, base_x, base_y)
+                            outpost_score += dist_to_base * 2.0
+
+                            custom_score += outpost_score
+
                         for t in my_towers:
                             if hex_distance(op.arg0, op.arg1, t.x, t.y) <= 1:
                                 custom_score -= 10.0
@@ -133,6 +150,17 @@ class SmartGreedyAgent(BaseAgent):
                         target_tower = next((t for t in my_towers if t.tower_id == tower_id), None)
 
                         if target_tower:
+                            # Exploding Combat Ant handling
+                            near_exploding_ant = False
+                            for ant in enemy_ants:
+                                if ant.kind == AntKind.COMBAT and ant.hp < 10 and hex_distance(target_tower.x, target_tower.y, ant.x, ant.y) <= 2:
+                                    near_exploding_ant = True
+                                    break
+
+                            if near_exploding_ant:
+                                if target_type in (TowerType.HEAVY, TowerType.HEAVY_PLUS):
+                                    custom_score += 200.0
+
                             if target_type in (TowerType.ICE, TowerType.HEAVY_PLUS, TowerType.MORTAR_PLUS):
                                 custom_score += 60.0
                                 if target_type in (TowerType.HEAVY_PLUS, TowerType.MORTAR_PLUS):
@@ -161,6 +189,16 @@ class SmartGreedyAgent(BaseAgent):
                         tower_id = op.arg0
                         target_tower = next((t for t in my_towers if t.tower_id == tower_id), None)
                         if target_tower:
+                            # Exploding Combat Ant handling
+                            near_exploding_ant = False
+                            for ant in enemy_ants:
+                                if ant.kind == AntKind.COMBAT and ant.hp < 10 and hex_distance(target_tower.x, target_tower.y, ant.x, ant.y) <= 2:
+                                    near_exploding_ant = True
+                                    break
+
+                            if near_exploding_ant:
+                                custom_score += 150.0 # salvage points before explosion destroys it
+
                             # 尝试安全地获取 max_hp，如果由于 SDK 版本不同获取不到，则保底为 15
                             max_hp = 15
                             if hasattr(TOWER_STATS, 'get'):
