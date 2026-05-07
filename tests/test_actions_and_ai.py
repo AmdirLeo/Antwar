@@ -3,9 +3,9 @@ from __future__ import annotations
 from pathlib import Path
 
 import AI.ai_greedy as greedy_module
-from AI.ai_greedy import AI as GreedyAI, _to_greedy_info, _to_sdk_operation
+from AI.ai_greedy import AI as GreedyAI
 from AI.ai_mcts import MCTSAgent
-from AI.ai_random import RandomAgent
+from AI.ai_random import AdvancedSearchAgent as RandomAgent
 from SDK.utils.actions import ActionCatalog
 from SDK.backend import load_backend
 from SDK.utils.features import FeatureExtractor
