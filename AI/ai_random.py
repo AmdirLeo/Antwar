@@ -86,16 +86,19 @@ class AdvancedSearchAgent(BaseAgent):
             else:
                 custom_score = 0.0
 
+        is_saving_for_super_weapon = (cluster_score >= 8.0 and coins < 100)
+
         for op in bundle.operations:
+            if is_saving_for_super_weapon and op.op_type in (OperationType.BUILD_TOWER, OperationType.UPGRADE_TOWER, OperationType.UPGRADE_GENERATION_SPEED, OperationType.UPGRADE_GENERATED_ANT):
+                custom_score -= 10000.0
+
             # -- Super Weapons --
             if op.op_type in (OperationType.USE_LIGHTNING_STORM, OperationType.USE_EMP_BLASTER):
                 if is_endgame:
                     # Penalize super weapon usage in endgame to win the tie-breaker
                     custom_score -= 5000.0
-                    debug_log("Endgame tie-breaker: Penalizing super weapon usage!")
                 elif cluster_score > 15.0 and hex_distance(op.arg0, op.arg1, cluster_x, cluster_y) <= 2:
                     custom_score += 1000.0 + cluster_score * 10.0
-                    debug_log(f"High value Super Weapon target found at ({op.arg0}, {op.arg1})!")
 
             # -- Tower Cooperation (Build/Upgrade) --
             elif op.op_type == OperationType.BUILD_TOWER:
@@ -191,7 +194,6 @@ class AdvancedSearchAgent(BaseAgent):
 
                             if target_tower.hp > 0 and target_tower.hp < max_hp * 0.2:
                                 custom_score += 70.0
-                                debug_log(f"Selling dying tower {tower_id} at ({target_tower.x}, {target_tower.y})")
 
                             min_dist_to_enemy = min([hex_distance(target_tower.x, target_tower.y, ant.x, ant.y) for ant in enemy_ants] + [999])
                             if min_dist_to_enemy > 12 and threat_level > 0:
@@ -217,7 +219,7 @@ class AdvancedSearchAgent(BaseAgent):
             cluster_score, cluster_x, cluster_y = self._evaluate_clustering(state, player)
             coins = state.coins[player]
 
-            debug_log(f"--- Round State --- | Coins: {coins} | Threat: {threat_level:.1f} | Max Enemy Cluster Score: {cluster_score:.1f} at ({cluster_x}, {cluster_y})")
+            round_log_msg = f"--- Round State --- | Coins: {coins} | Threat: {threat_level:.1f} | Max Enemy Cluster Score: {cluster_score:.1f} at ({cluster_x}, {cluster_y})"
 
             enemy_ants = [ant for ant in state.ants if ant.player == 1 - player and ant.hp > 0]
             my_towers = [t for t in state.towers if t.player == player]
@@ -236,63 +238,74 @@ class AdvancedSearchAgent(BaseAgent):
             K = min(8, len(scored_bundles))
             top_k_bundles = scored_bundles[:K]
 
-            best_bundle = noop_bundle
-            best_score = -9999.0
+            best_overall_bundle = top_k_bundles[0][1] if top_k_bundles else noop_bundle
+            best_overall_score = -99999.0
 
-            # 2. 1-Step Lookahead Search
-            for base_score, bundle in top_k_bundles:
-                # Always check for time limit! Hard cutoff is 9.0 seconds.
-                if time.time() - start_time > 9.0:
-                    debug_log("Time limit reached during lookahead search, returning best found so far.")
+            # 2. Iterative Deepening Lookahead Search
+            depth = 1
+            while time.time() - start_time < 9.0:
+                depth_best_bundle = noop_bundle
+                depth_best_score = -99999.0
+                timeout_occurred = False
+
+                for base_score, bundle in top_k_bundles:
+                    if time.time() - start_time > 9.0:
+                        timeout_occurred = True
+                        break
+
+                    total_score = base_score
+
+                    # Clone state and simulate forward
+                    try:
+                        sim_state = state.clone()
+
+                        # Simulate deep rolls
+                        for step in range(depth):
+                            ops = bundle.operations if step == 0 else []
+                            if player == 0:
+                                sim_state.resolve_turn(ops, [])
+                            else:
+                                sim_state.resolve_turn([], ops)
+
+                        # Evaluate the future state
+                        future_threat = self.calculate_threat_level(sim_state, player)
+                        future_cluster_score, _, _ = self._evaluate_clustering(sim_state, player)
+                        future_coins = sim_state.coins[player]
+                        future_enemy_ants = [ant for ant in sim_state.ants if ant.player == 1 - player and ant.hp > 0]
+                        future_my_towers = [t for t in sim_state.towers if t.player == player]
+                        future_ice_tower_positions = [(t.x, t.y) for t in future_my_towers if t.tower_type == TowerType.ICE]
+
+                        dummy_bundle = ActionBundle(name="dummy", score=0.0, tags=("dummy",))
+                        future_heuristic_score = self.evaluate_bundle_heuristic(dummy_bundle, sim_state, player, future_threat, future_cluster_score, -1, -1, future_coins, future_enemy_ants, future_my_towers, future_ice_tower_positions)
+
+                        hp_loss = state.bases[player].hp - sim_state.bases[player].hp
+                        total_score += 0.8 * future_heuristic_score - hp_loss * 10000.0 - future_threat * 10.0
+
+                    except Exception as sim_e:
+                        pass # Ignore sim errors in deep rollouts
+
+                    if total_score > depth_best_score:
+                        depth_best_score = total_score
+                        depth_best_bundle = bundle
+
+                # If we completed the depth without timing out, save the results
+                if not timeout_occurred:
+                    best_overall_bundle = depth_best_bundle
+                    best_overall_score = depth_best_score
+                    depth += 1
+                else:
                     break
-
-                total_score = base_score
-
-                # Clone state and simulate
-                try:
-                    sim_state = state.clone()
-
-                    # Assume opponent does nothing for 1-step lookahead simplicity
-                    if player == 0:
-                        sim_state.resolve_turn(bundle.operations, [])
-                    else:
-                        sim_state.resolve_turn([], bundle.operations)
-
-                    # Evaluate the future state
-                    future_threat = self.calculate_threat_level(sim_state, player)
-                    future_cluster_score, _, _ = self._evaluate_clustering(sim_state, player)
-                    future_coins = sim_state.coins[player]
-                    future_enemy_ants = [ant for ant in sim_state.ants if ant.player == 1 - player and ant.hp > 0]
-                    future_my_towers = [t for t in sim_state.towers if t.player == player]
-                    future_ice_tower_positions = [(t.x, t.y) for t in future_my_towers if t.tower_type == TowerType.ICE]
-
-                    # Create a dummy no-op bundle to evaluate the *state* itself using our heuristic
-                    dummy_bundle = ActionBundle(name="dummy", score=0.0, tags=("dummy",))
-                    future_heuristic_score = self.evaluate_bundle_heuristic(dummy_bundle, sim_state, player, future_threat, future_cluster_score, -1, -1, future_coins, future_enemy_ants, future_my_towers, future_ice_tower_positions)
-
-                    # Also heavily reward lowering the threat level in the future
-                    threat_reduction = threat_level - future_threat
-
-                    total_score += 0.8 * future_heuristic_score + threat_reduction * 10.0
-
-                except Exception as sim_e:
-                    debug_log(f"Simulation failed for bundle {bundle.name}, using base score. Error: {sim_e}")
-
-                if total_score > best_score:
-                    best_score = total_score
-                    best_bundle = bundle
-
-            # 如果得分最高的操作也毫无意义（<=0），强制选择空操作
-            if best_score <= 0.0:
-                best_bundle = noop_bundle
 
             elapsed_time = (time.time() - start_time) * 1000
 
-            # 记录决策结果
-            action_desc = best_bundle.name if best_bundle.name else "Wait/Pass"
-            debug_log(f"Action Decided: {action_desc} | Score: {best_score:.1f} | Decision Time: {elapsed_time:.2f} ms")
+            action_desc = best_overall_bundle.name if best_overall_bundle.name else "Wait/Pass"
+            is_noop = best_overall_bundle.name in ("hold", "noop", "Wait/Pass")
 
-            return best_bundle
+            if (not is_noop) or (state.round_index % 10 == 0) or (elapsed_time > 1000.0):
+                debug_log(round_log_msg)
+                debug_log(f"Action Decided: {action_desc} | Score: {best_overall_score:.1f} | Completed Depth: {depth-1} | Decision Time: {elapsed_time:.2f} ms")
+
+            return best_overall_bundle
 
         except Exception as e:
             # 当发生不可预知的崩溃时，记录异常栈并安全返回跳过动作
