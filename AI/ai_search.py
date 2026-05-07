@@ -279,7 +279,7 @@ class AdvancedSearchAgent(BaseAgent):
                         future_heuristic_score = self.evaluate_bundle_heuristic(dummy_bundle, sim_state, player, future_threat, future_cluster_score, -1, -1, future_coins, future_enemy_ants, future_my_towers, future_ice_tower_positions)
 
                         hp_loss = state.bases[player].hp - sim_state.bases[player].hp
-                        total_score += 0.8 * future_heuristic_score - hp_loss * 10000.0 - future_threat * 10.0
+                        total_score += (future_heuristic_score / depth) - (hp_loss * 200.0) - (future_threat * 10.0)
 
                     except Exception as sim_e:
                         pass # Ignore sim errors in deep rollouts
