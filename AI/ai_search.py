@@ -279,7 +279,7 @@ class AdvancedSearchAgent(BaseAgent):
                         future_heuristic_score = self.evaluate_bundle_heuristic(dummy_bundle, sim_state, player, future_threat, future_cluster_score, -1, -1, future_coins, future_enemy_ants, future_my_towers, future_ice_tower_positions)
 
                         hp_loss = state.bases[player].hp - sim_state.bases[player].hp
-                        total_score += (future_heuristic_score / depth) - (hp_loss * 200.0) - (future_threat * 10.0)
+                        total_score = base_score + future_heuristic_score - (hp_loss * 50.0) - (future_threat * 5.0)
 
                     except Exception as sim_e:
                         pass # Ignore sim errors in deep rollouts
@@ -301,7 +301,7 @@ class AdvancedSearchAgent(BaseAgent):
             action_desc = best_overall_bundle.name if best_overall_bundle.name else "Wait/Pass"
             is_noop = best_overall_bundle.name in ("hold", "noop", "Wait/Pass")
 
-            if (not is_noop) or (state.round_index % 10 == 0) or (elapsed_time > 1000.0):
+            if (not is_noop) or (state.round_index % 20 == 0):
                 debug_log(round_log_msg)
                 debug_log(f"Action Decided: {action_desc} | Score: {best_overall_score:.1f} | Completed Depth: {depth-1} | Decision Time: {elapsed_time:.2f} ms")
 
